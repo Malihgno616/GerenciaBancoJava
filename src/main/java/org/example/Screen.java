@@ -3,6 +3,8 @@ package org.example;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Screen extends JFrame {
     private JButton btnViewConta;
@@ -40,6 +42,14 @@ public class Screen extends JFrame {
        btnViewConta.setBackground(new Color(5, 64, 242, 255));
        btnViewConta.setForeground(new Color(242, 242, 242, 255));
 
+       btnViewConta.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+             dispose();
+             new Visualizar();
+          }
+       });
+
        add(mainTitle);
        add(txt);
 
@@ -52,9 +62,19 @@ public class Screen extends JFrame {
        btnCriarConta.setBackground(new Color(5, 64, 242, 255));
        btnCriarConta.setForeground(new Color(242, 242, 242, 255));
 
+       btnCriarConta.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+             dispose();
+             new Cadastro();
+          }
+       });
+
        add(btnCriarConta);
 
        setVisible(true); // Torna a janela visível
+
+       }
     }
 
-}
+
