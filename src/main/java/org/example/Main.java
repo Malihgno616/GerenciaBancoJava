@@ -13,7 +13,7 @@ public class Main {
         try {
             Connection conn = connSql.getConnection();
             JOptionPane.showMessageDialog(null, "Conectado com sucesso!");
-            new Screen();
+            new Screen(connSql);
         } catch (SQLException | ClassNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Erro ao conectar!");
             e.printStackTrace();

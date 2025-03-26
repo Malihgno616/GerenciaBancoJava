@@ -5,12 +5,15 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Screen extends JFrame {
     private JButton btnViewConta;
     private JButton btnCriarConta;
-
-    public Screen(){
+    private ConnSql connSql;
+    public Screen(ConnSql connSql){
+       this.connSql = connSql;
        setTitle("Gerenciamento Bancário");
        setSize(786, 300);
        setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -21,7 +24,7 @@ public class Screen extends JFrame {
 
 //     Título principal do sistema bancário
        JLabel mainTitle = new JLabel();
-       mainTitle.setText("Seja bem-vindo ao nosso sistema bancário!");
+       mainTitle.setText("Seja bem-vindo ao nosso banco!");
        Font fontTitle = new Font("Arial", Font.BOLD, 32);
        mainTitle.setHorizontalAlignment(SwingConstants.CENTER);
        mainTitle.setBounds(0, 20, 800, 50);
@@ -35,7 +38,7 @@ public class Screen extends JFrame {
        txt.setBounds(0,100,800,40);
 
 //     Opções botões - visual
-       btnViewConta = new JButton("Visualizar conta");
+       btnViewConta = new JButton("Entra na conta");
        btnViewConta.setHorizontalAlignment(SwingConstants.CENTER);
        btnViewConta.setBounds((getWidth() - 200 )/2, 200, 180, 50);
        btnViewConta.setFont(fontText);
@@ -46,7 +49,7 @@ public class Screen extends JFrame {
           @Override
           public void actionPerformed(ActionEvent e) {
              dispose();
-             new Visualizar();
+             new Login();
           }
        });
 
@@ -66,7 +69,7 @@ public class Screen extends JFrame {
           @Override
           public void actionPerformed(ActionEvent e) {
              dispose();
-             new Cadastro();
+             new Cadastro(connSql);
           }
        });
 

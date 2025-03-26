@@ -3,14 +3,14 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 
-public class Visualizar extends JFrame {
+public class Login extends JFrame {
     private JLabel mainTitle;
     private JLabel lblCpf;
     private JTextField txtCpf;
     private JButton btnView;
 
-    public Visualizar(){
-        setTitle("Visualização da conta");
+    public Login(){
+        setTitle("Entrar na conta");
         setSize(786, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false); // Não altera o tamanho da tela
@@ -39,7 +39,7 @@ public class Visualizar extends JFrame {
 
         add(txtCpf);
 
-        btnView = new JButton("Verificar");
+        btnView = new JButton("Entrar");
         btnView.setFont(fontText);
         btnView.setHorizontalAlignment(SwingConstants.CENTER);
         btnView.setBounds((getWidth()-80)/2, 245, 195, 50);

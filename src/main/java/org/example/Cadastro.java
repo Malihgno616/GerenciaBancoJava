@@ -2,6 +2,11 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class Cadastro extends JFrame {
     private JLabel mainTitle;
@@ -12,9 +17,12 @@ public class Cadastro extends JFrame {
     private JTextField sobreNomeCad;
     private JTextField cpfCad;
     private JButton cadBtn;
-    public Cadastro() {
+    private ConnSql connSql;
+    private JButton clearBtn;
+    public Cadastro(ConnSql connSql) {
+        this.connSql = connSql;
         setTitle("Cadastro");
-        setSize(786, 600);
+        setSize(786, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false); // Não altera o tamanho da tela
         setLocationRelativeTo(null);
@@ -83,6 +91,68 @@ public class Cadastro extends JFrame {
         cadBtn.setBackground(new Color(0,0,0, 255));
         add(cadBtn);
 
+        cadBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cadUsuario();
+            }
+        });
+
+        clearBtn = new JButton("Limpar");
+        clearBtn.setFont(fontText);
+        clearBtn.setHorizontalAlignment(SwingConstants.CENTER);
+        clearBtn.setBounds((getWidth()-80)/2, 545, 195, 50);
+        clearBtn.setForeground(new Color(255, 255, 255));
+        clearBtn.setBackground(new Color(255, 0, 0, 255));
+
+        add(clearBtn);
+
+        clearBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                limparCampos();
+            }
+        });
+
         setVisible(true);
     }
+
+    private void cadUsuario(){
+        String nome = nomeCad.getText();
+        String sobreNome = sobreNomeCad.getText();
+        String cpf = cpfCad.getText();
+
+        if (nome.isEmpty() || sobreNome.isEmpty() || cpf.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos");
+            return;
+        }
+
+        String query = "INSERT INTO cliente (nome, sobrenome, cpf) VALUES (?, ?, ?)";
+
+        try (Connection conn = connSql.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, nome);
+            stmt.setString(2, sobreNome);
+            stmt.setString(3, cpf);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if(rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
+                limparCampos();
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao cadastrar: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+    }
+
+    private void limparCampos() {
+        nomeCad.setText("");
+        sobreNomeCad.setText("");
+        cpfCad.setText("");
+    }
+
 }
