@@ -2,14 +2,22 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Login extends JFrame {
     private JLabel mainTitle;
     private JLabel lblCpf;
     private JTextField txtCpf;
     private JButton btnView;
+    private ConnSql connSql;
 
-    public Login(){
+    public Login(ConnSql connSql){
+        this.connSql = connSql;
         setTitle("Entrar na conta");
         setSize(786, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -48,6 +56,48 @@ public class Login extends JFrame {
 
         add(btnView);
 
+        btnView.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logarConta();
+            }
+        });
+
         setVisible(true);
+
     }
+    private void logarConta(){
+        String cpf = txtCpf.getText().trim();
+
+        if(cpf.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Por favor, digite um CPF");
+            return;
+        }
+
+        String query = "SELECT COUNT(*) FROM cliente WHERE cpf = ?";
+
+        try (Connection conn = connSql.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, cpf);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+                int count = rs.getInt(1);
+
+                if(count > 0) {
+                    // CPF encontrado, abrir próxima tela
+                    JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
+                    this.dispose(); // Fecha a tela de login
+                    new TelaBanco(connSql);
+                } else {
+                    JOptionPane.showMessageDialog(this, "CPF não cadastrado!");
+                }
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao verificar CPF: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
 }

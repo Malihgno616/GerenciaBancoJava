@@ -49,7 +49,7 @@ public class Screen extends JFrame {
           @Override
           public void actionPerformed(ActionEvent e) {
              dispose();
-             new Login();
+             new Login(connSql);
           }
        });
 
