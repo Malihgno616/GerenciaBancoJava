@@ -15,9 +15,12 @@ public class Login extends JFrame {
     private JTextField txtCpf;
     private JButton btnView;
     private ConnSql connSql;
+    private String clienteCPF;
 
-    public Login(ConnSql connSql){
+    public Login(ConnSql connSql, String clienteCPF){
         this.connSql = connSql;
+        this.clienteCPF = clienteCPF;
+
         setTitle("Entrar na conta");
         setSize(786, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -66,10 +69,11 @@ public class Login extends JFrame {
         setVisible(true);
 
     }
-    private void logarConta(){
+    private void logarConta() {
         String cpf = txtCpf.getText().trim();
 
-        if(cpf.isEmpty()){
+        // Verificação única de CPF vazio
+        if (cpf.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, digite um CPF");
             return;
         }
@@ -82,14 +86,14 @@ public class Login extends JFrame {
             stmt.setString(1, cpf);
             ResultSet rs = stmt.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 int count = rs.getInt(1);
 
-                if(count > 0) {
-                    // CPF encontrado, abrir próxima tela
+                if (count > 0) {
+                    // CPF válido: abre TelaBanco com o CPF digitado
                     JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
-                    this.dispose(); // Fecha a tela de login
-                    new TelaBanco(connSql);
+                    this.dispose();
+                    new TelaBanco(connSql, cpf); // Corrigido: usa o cpf do campo de texto
                 } else {
                     JOptionPane.showMessageDialog(this, "CPF não cadastrado!");
                 }

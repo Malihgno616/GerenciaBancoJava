@@ -3,6 +3,8 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TelaBanco extends JFrame {
@@ -13,10 +15,16 @@ public class TelaBanco extends JFrame {
     private final JButton btnSaque = new JButton("CLIQUE AQUI PARA SACAR");
     private final JButton btnDeposito = new JButton("CLIQUE AQUI PARA DEPOSITAR");
     private final Font fontTitle = new Font("Arial", Font.BOLD, 32);
+    private JLabel nome = new JLabel("");
+    private JLabel sobreNome = new JLabel("");
+    private JLabel cpf = new JLabel("");
+    private JLabel saldo = new JLabel("");
     private ConnSql connSql;
+    private String clienteCPF;
 
-    public TelaBanco(ConnSql connSql) {
+    public TelaBanco(ConnSql connSql, String clienteCPF) {
         this.connSql = connSql;
+        this.clienteCPF = clienteCPF;
         setTitle("Conta");
         setSize(786, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -64,5 +72,61 @@ public class TelaBanco extends JFrame {
         btnDeposito.setBackground(new Color(0,0,0,255));
 
         add(btnDeposito);
+
+        nome.setFont(fontTitle);
+        nome.setBounds(400, 150, 350, 50);
+        add(nome);
+
+        sobreNome.setFont(fontTitle);
+        sobreNome.setBounds(400, 250, 350, 50);
+        add(sobreNome);
+
+        cpf.setFont(fontTitle);
+        cpf.setBounds(400, 350, 350, 50);
+        add(cpf);
+
+        saldo.setFont(fontTitle);
+        saldo.setBounds(400, 450, 350, 50);
+        add(saldo);
+
+        exibirPerfil();
+
     }
+
+    private void exibirPerfil() {
+        try {
+            // Remove caracteres não numéricos do CPF
+            String cpfBusca = clienteCPF.replaceAll("[^0-9]", "");
+
+            // Consulta SQL para buscar os dados
+            String query = "SELECT * FROM cliente WHERE cpf = ?";
+
+            try (Connection conn = connSql.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
+
+                stmt.setString(1, cpfBusca);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        // Formata os dados
+                        String cpfFormatado = rs.getString("cpf")
+                                .replaceFirst("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
+
+                        // Atualiza os JLabels
+                        nome.setText(rs.getString("nome"));
+                        sobreNome.setText(rs.getString("sobrenome"));
+                        cpf.setText(cpfFormatado);
+                        saldo.setText(String.format("R$ %.2f", rs.getDouble("saldo")));
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Cliente não encontrado!");
+                        dispose(); // Fecha a janela se não encontrar
+                    }
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar dados: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }

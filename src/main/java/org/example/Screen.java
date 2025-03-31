@@ -1,17 +1,15 @@
 package org.example;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class Screen extends JFrame {
     private JButton btnViewConta;
     private JButton btnCriarConta;
     private ConnSql connSql;
+   private String clienteCPF;
     public Screen(ConnSql connSql){
        this.connSql = connSql;
        setTitle("Gerenciamento Bancário");
@@ -49,7 +47,7 @@ public class Screen extends JFrame {
           @Override
           public void actionPerformed(ActionEvent e) {
              dispose();
-             new Login(connSql);
+             new Login(connSql, clienteCPF);
           }
        });
 
