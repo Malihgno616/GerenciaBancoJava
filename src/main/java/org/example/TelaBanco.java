@@ -24,7 +24,7 @@ public class TelaBanco extends JFrame {
     private ConnSql connSql;
     private String clienteCPF;
     private JButton btnVoltar = new JButton("Voltar");
-    private TelaBanco TelaBanco;
+    private TelaBanco telaBanco;
     public TelaBanco(ConnSql connSql, String clienteCPF) {
         this.connSql = connSql;
         this.clienteCPF = clienteCPF;
@@ -113,14 +113,14 @@ public class TelaBanco extends JFrame {
         btnDeposito.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Deposito(connSql, clienteCPF, TelaBanco);
+                new Deposito(connSql, clienteCPF, telaBanco);
             }
         });
 
         btnSaque.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Saque();
+                new Saque(connSql, clienteCPF, telaBanco);
             }
         });
 
@@ -167,10 +167,6 @@ public class TelaBanco extends JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao buscar dados: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public void atualizarSaldoNaTela(double novoSaldo) {
-        saldo.setText(String.format("R$ %.2f", novoSaldo));
     }
 
 }
