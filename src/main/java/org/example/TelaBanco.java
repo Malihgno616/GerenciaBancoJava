@@ -24,7 +24,7 @@ public class TelaBanco extends JFrame {
     private ConnSql connSql;
     private String clienteCPF;
     private JButton btnVoltar = new JButton("Voltar");
-
+    private TelaBanco TelaBanco;
     public TelaBanco(ConnSql connSql, String clienteCPF) {
         this.connSql = connSql;
         this.clienteCPF = clienteCPF;
@@ -113,7 +113,7 @@ public class TelaBanco extends JFrame {
         btnDeposito.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Deposito(connSql);
+                new Deposito(connSql, clienteCPF, TelaBanco);
             }
         });
 
@@ -126,7 +126,7 @@ public class TelaBanco extends JFrame {
 
     }
 
-    private void exibirPerfil() {
+    void exibirPerfil() {
         try {
             // Remove caracteres não numéricos do CPF
             String cpfBusca = clienteCPF.replaceAll("[^0-9]", "");
@@ -149,7 +149,14 @@ public class TelaBanco extends JFrame {
                         nome.setText(rs.getString("nome"));
                         sobreNome.setText(rs.getString("sobrenome"));
                         cpf.setText(cpfFormatado);
-                        saldo.setText(String.format("R$ %.2f", rs.getDouble("saldo")));
+
+                        // Tratamento do saldo
+                        double saldoValor = rs.getDouble("saldo");
+                        if (rs.wasNull()) {  // Verifica se o valor do saldo é nulo no banco
+                            saldoValor = 0.0; // Valor padrão se for nulo
+                        }
+
+                        saldo.setText(String.format("R$ %.2f", saldoValor));
                     } else {
                         JOptionPane.showMessageDialog(this, "Cliente não encontrado!");
                         dispose(); // Fecha a janela se não encontrar
@@ -160,6 +167,10 @@ public class TelaBanco extends JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao buscar dados: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void atualizarSaldoNaTela(double novoSaldo) {
+        saldo.setText(String.format("R$ %.2f", novoSaldo));
     }
 
 }
