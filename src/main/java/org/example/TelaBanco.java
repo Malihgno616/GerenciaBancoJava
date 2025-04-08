@@ -23,6 +23,7 @@ public class TelaBanco extends JFrame {
     private JLabel saldo = new JLabel("");
     private ConnSql connSql;
     private String clienteCPF;
+    private JButton btnVoltar = new JButton("Voltar");
 
     public TelaBanco(ConnSql connSql, String clienteCPF) {
         this.connSql = connSql;
@@ -91,7 +92,23 @@ public class TelaBanco extends JFrame {
         saldo.setBounds(400, 450, 350, 50);
         add(saldo);
 
+        btnVoltar.setFont(fontTitle);
+        btnVoltar.setHorizontalAlignment(SwingConstants.CENTER);
+        btnVoltar.setBounds((getWidth()-80)/2, 550, 195, 50);
+        btnVoltar.setForeground(new Color(255,255,255));
+        btnVoltar.setBackground(new Color(0, 133, 22));
+
+        add(btnVoltar);
+
         exibirPerfil();
+
+        btnVoltar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Login(connSql, clienteCPF);
+            }
+        });
 
         btnDeposito.addActionListener(new ActionListener() {
             @Override

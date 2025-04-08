@@ -21,13 +21,4 @@ public class ConnSql {
             conn.close();
         }
     }
-
-    public int getIdCliente() {
-        int idCliente = getIdCliente();
-        return getIdCliente();
-    }
-
-    private int idCliente() {
-        return idCliente();
-    }
 }

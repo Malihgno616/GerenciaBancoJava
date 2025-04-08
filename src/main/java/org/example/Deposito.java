@@ -11,6 +11,7 @@ public class Deposito extends JFrame {
     private TextField saldo = new TextField();
     private JLabel txtSaldo = new JLabel("Digite aqui a quantidade para depósito");
     private JButton btnDepositar = new JButton("Depositar");
+    private JButton btnVoltar = new JButton("Voltar");
 
     public Deposito(ConnSql connSql) {
         this.connSql = connSql;
@@ -43,37 +44,6 @@ public class Deposito extends JFrame {
         setVisible(true);
     }
     private void depositar() {
-        String valorTexto = saldo.getText();
 
-        try {
-            // Converter o texto para número
-            double valor = Double.parseDouble(valorTexto);
-
-            // Obter o ID do cliente (você precisa ter essa informação)
-            int idCliente = connSql.getIdCliente(); // Supondo que exista um método para pegar o ID
-
-            // Preparar a query SQL
-            String query = "UPDATE cliente SET saldo = saldo + ? WHERE id = ?";
-
-            try (java.sql.PreparedStatement pstmt = connSql.getConnection().prepareStatement(query)) {
-                pstmt.setDouble(1, valor);
-                pstmt.setInt(2, idCliente);
-
-                int linhasAfetadas = pstmt.executeUpdate();
-
-                if (linhasAfetadas > 0) {
-                    JOptionPane.showMessageDialog(this, "Depósito realizado com sucesso!");
-                    this.dispose(); // Fechar janela após depósito
-                } else {
-                    JOptionPane.showMessageDialog(this, "Erro ao realizar depósito");
-                }
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Valor inválido! Digite apenas números");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Erro de banco de dados: " + ex.getMessage());
-        }
     }
 }

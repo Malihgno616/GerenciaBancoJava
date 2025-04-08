@@ -16,6 +16,7 @@ public class Login extends JFrame {
     private JButton btnView;
     private ConnSql connSql;
     private String clienteCPF;
+    private JButton btnVoltar = new JButton("Voltar");
 
     public Login(ConnSql connSql, String clienteCPF){
         this.connSql = connSql;
@@ -58,6 +59,22 @@ public class Login extends JFrame {
         btnView.setBackground(new Color(0,0,0, 255));
 
         add(btnView);
+
+        btnVoltar.setFont(fontText);
+        btnVoltar.setHorizontalAlignment(SwingConstants.CENTER);
+        btnVoltar.setBounds((getWidth()-80)/2, 370, 195, 50);
+        btnVoltar.setForeground(new Color(255,255,255));
+        btnVoltar.setBackground(new Color(0, 133, 22));
+
+        add(btnVoltar);
+
+        btnVoltar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Screen(connSql);
+            }
+        });
 
         btnView.addActionListener(new ActionListener() {
             @Override
