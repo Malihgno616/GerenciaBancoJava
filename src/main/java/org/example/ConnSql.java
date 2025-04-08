@@ -2,6 +2,7 @@ package org.example;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ConnSql {
@@ -21,4 +22,12 @@ public class ConnSql {
         }
     }
 
+    public int getIdCliente() {
+        int idCliente = getIdCliente();
+        return getIdCliente();
+    }
+
+    private int idCliente() {
+        return idCliente();
+    }
 }

@@ -2,19 +2,21 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TelaBanco extends JFrame {
-    private final JLabel txtNome = new JLabel("Nome: ");
-    private final JLabel txtSobreNome = new JLabel("Sobrenome: ");
-    private final JLabel txtCpf = new JLabel("CPF: ");
-    private final JLabel txtSaldo = new JLabel("Saldo: ");
-    private final JButton btnSaque = new JButton("CLIQUE AQUI PARA SACAR");
-    private final JButton btnDeposito = new JButton("CLIQUE AQUI PARA DEPOSITAR");
-    private final Font fontTitle = new Font("Arial", Font.BOLD, 32);
+    private JLabel txtNome = new JLabel("Nome: ");
+    private JLabel txtSobreNome = new JLabel("Sobrenome: ");
+    private JLabel txtCpf = new JLabel("CPF: ");
+    private JLabel txtSaldo = new JLabel("Saldo: ");
+    private JButton btnSaque = new JButton("CLIQUE AQUI PARA SACAR");
+    private JButton btnDeposito = new JButton("CLIQUE AQUI PARA DEPOSITAR");
+    private Font fontTitle = new Font("Arial", Font.BOLD, 32);
     private JLabel nome = new JLabel("");
     private JLabel sobreNome = new JLabel("");
     private JLabel cpf = new JLabel("");
@@ -90,6 +92,20 @@ public class TelaBanco extends JFrame {
         add(saldo);
 
         exibirPerfil();
+
+        btnDeposito.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Deposito(connSql);
+            }
+        });
+
+        btnSaque.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Saque();
+            }
+        });
 
     }
 
